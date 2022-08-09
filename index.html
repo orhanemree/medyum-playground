@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🧞 Medyum Playground</title>
+    <meta name="description" content="">
+    <script defer src="https://pyscript.net/alpha/pyscript.js"></script>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <nav>
+        <h1><a href="https:/github.com/orhanemree/medyum-playground">🧞 Medyum Playground</a></h1>
+        <div>
+            <ul class="links">
+                <li><a href="https:/github.com/orhanemree">orhanemree</a></li> ●
+                <li><a href="https:/github.com/orhanemree/medyum-lang">medyum-lang</a></li> ●
+                <li><a href="https://github.com/orhanemree/medyum-lang/blob/master/DOCUMENTATION.md">belgeler</a></li> 
+            </ul>
+        </div>
+    </nav>
+    <div class="grid-container">
+        <div>
+            Kod:
+            <textarea id="input">10 5 + yaz</textarea>
+        </div>
+        <div>
+            <button id="run" pys-onClick="run">
+                <img src="/run.svg">
+            </button>
+        </div>
+        <div>
+            Çıktı:
+            <div id="output">
+                
+            </div>
+        </div>
+    </div>
+
+    <!-- PyScript -->
+    <py-env>
+        - medyum
+    </py-env>
+    <py-script>
+        from medyum import medyum
+
+        def _print(*args,**kwargs):
+            prev = Element("output").element.innerHTML
+            if "end" in kwargs:
+                pyscript.write("output", prev + str(args[0]) + kwargs["end"])
+            else:
+                pyscript.write("output", prev + str(args[0]) + "{{br}}".replace("{{", "<").replace("}}", ">"))
+        
+        medyum.print = lambda *args, **kwargs: _print(*args, **kwargs)
+
+        def run(*args, **kwargs):
+            input = Element("input").element.value
+            Element("output").element.innerHTML = ""
+            program = input.split("\n") # split lines need for ignoring commnets
+            program = medyum.lex_program(program)
+            program = medyum.run_program(program)
+    </py-script>
+
+</body>
+</html>
